@@ -24,7 +24,6 @@ class _RegisterState extends State<Register> {
     ApiResponse response = await register(_nameController.text, _emailController.text, _passwordController.text);
 
     if(response.error == null){
-      print(response.data);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${response.data}'))
       );

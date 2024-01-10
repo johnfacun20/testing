@@ -81,3 +81,37 @@ Future<ApiResponse> register(String name, String email, String password) async {
   return apiResponse;
 
 }
+
+Future<ApiResponse> getAllUsers() async {
+
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+
+    final response = await http.post(
+      Uri.parse('$ipaddress/users'),
+      headers: {'Accept': 'application/json'}
+    );
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['users'];
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['message'];
+        apiResponse.error = errors;
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = 'Something went wrong.';
+        break;
+    }
+
+  } catch(e){
+    apiResponse.error = 'Something went wrong.';
+  }
+
+  return apiResponse;
+}
