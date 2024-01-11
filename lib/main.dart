@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
     if(user.account_type == 'admin'){
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => UserPage()), (route) => false);
     } else {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => StudentPage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => StudentPageW()), (route) => false);
     }
 
 

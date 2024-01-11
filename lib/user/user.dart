@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/main.dart';
 import 'package:testing/model/api_response.dart';
 import 'package:testing/model/user.dart';
+import 'package:testing/student/student.dart';
 import 'package:testing/user/create_user_page.dart';
 import 'package:testing/user/edit_user.dart';
 
@@ -31,7 +32,10 @@ class _UserState extends State<UserPage> {
 
   Future<void> getUsers() async {
 
-    ApiResponse response = await getAllUsers();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = await prefs.getString('token');
+
+    ApiResponse response = await getAllUsers(token);
 
     if(response.error == null){
       setState(() {
@@ -153,7 +157,7 @@ class _UserState extends State<UserPage> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () { 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateUserPage()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => StudentPage()));
             },
             child: Icon(Icons.add),
           ),

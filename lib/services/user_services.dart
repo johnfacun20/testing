@@ -159,7 +159,7 @@ Future<ApiResponse> deleteUser(int userID) async {
 
 }
 
-Future<ApiResponse> getAllUsers() async {
+Future<ApiResponse> getAllUsers(String? token) async {
 
   ApiResponse apiResponse = ApiResponse();
 
@@ -167,7 +167,10 @@ Future<ApiResponse> getAllUsers() async {
 
     final response = await http.get(
       Uri.parse('$ipaddress/users'),
-      headers: {'Accept': 'application/json'}
+      headers: {
+        'Accept': 'application/json',
+        'Authorization':'Bearer ${token}'
+      }
     );
 
     switch(response.statusCode){
