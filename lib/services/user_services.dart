@@ -82,13 +82,89 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
 }
 
+Future<ApiResponse> saveUser(String name, String email, String age, String password) async {
+
+  ApiResponse apiResponse = ApiResponse();
+
+  try{
+
+    final response = await http.post(
+        Uri.parse('$ipaddress/users'),
+        headers: {'Accept': 'application/json'},
+        body: {
+          'name':name,
+          'email':email,
+          'age':age,
+          'password':password
+        }
+    );
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['response'];
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['message'];
+        apiResponse.error = errors;
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = "Something went wrong.";
+        break;
+    }
+
+  } catch(e){
+    apiResponse.error = "Something went wrong"+e.toString();
+  }
+
+  return apiResponse;
+
+}
+
+Future<ApiResponse> deleteUser(int userID) async {
+
+  ApiResponse apiResponse = ApiResponse();
+
+  try{
+
+    final response = await http.delete(
+        Uri.parse('$ipaddress/users/${userID.toString()}'),
+        headers: {'Accept': 'application/json'},
+    );
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['response'];
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['message'];
+        apiResponse.error = errors;
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = "Something went wrong.";
+        break;
+    }
+
+  } catch(e){
+    apiResponse.error = "Something went wrong"+e.toString();
+  }
+
+  return apiResponse;
+
+}
+
 Future<ApiResponse> getAllUsers() async {
 
   ApiResponse apiResponse = ApiResponse();
 
   try {
 
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse('$ipaddress/users'),
       headers: {'Accept': 'application/json'}
     );
