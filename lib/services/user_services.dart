@@ -82,7 +82,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
 }
 
-Future<ApiResponse> saveUser(String name, String email, String age, String password) async {
+Future<ApiResponse> saveUser(String name, String email, String age, String account_type, String password) async {
 
   ApiResponse apiResponse = ApiResponse();
 
@@ -95,6 +95,7 @@ Future<ApiResponse> saveUser(String name, String email, String age, String passw
           'name':name,
           'email':email,
           'age':age,
+          'account_type':account_type,
           'password':password
         }
     );

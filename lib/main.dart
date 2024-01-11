@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testing/model/api_response.dart';
 import 'package:testing/register.dart';
 import 'package:testing/services/user_services.dart';
+import 'package:testing/student.dart';
 import 'package:testing/styles.dart';
 import 'package:testing/user/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,7 +67,13 @@ class _MyAppState extends State<MyApp> {
     await prefs.setString('token', user.token ?? '');
     await prefs.setInt('userId', user.id ?? 0);
 
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => UserPage()), (route) => false);
+    if(user.account_type == 'admin'){
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => UserPage()), (route) => false);
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => StudentPage()), (route) => false);
+    }
+
+
 
   }
 

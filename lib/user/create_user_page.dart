@@ -43,10 +43,11 @@ class _CreateUserPageBodyState extends State<CreateUserPageBody> {
   TextEditingController _txtemail = TextEditingController();
   TextEditingController _txtage = TextEditingController();
   TextEditingController _txtpassword = TextEditingController();
+  TextEditingController _txtaccount_type = TextEditingController();
 
   Future<void> saveRecord()async {
 
-    ApiResponse response = await saveUser(_txtname.text, _txtemail.text, _txtage.text, _txtpassword.text);
+    ApiResponse response = await saveUser(_txtname.text, _txtemail.text, _txtage.text, _txtaccount_type.text, _txtpassword.text);
 
     if(response.error == null){
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,6 +98,17 @@ class _CreateUserPageBodyState extends State<CreateUserPageBody> {
                   validator: (String? value) {
                     if(value == null || value.isEmpty){
                       return 'Please enter your age!';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  controller: _txtaccount_type,
+                  decoration: textBoxStyle("Enter your account type", "Account Type"),
+                  validator: (String? value) {
+                    if(value == null || value.isEmpty){
+                      return 'Please enter your account type!';
                     }
                     return null;
                   },
