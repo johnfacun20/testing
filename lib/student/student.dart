@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/services/student_services.dart';
 
 import '../model/api_response.dart';
+import '../model/student.dart';
 
 class StudentPage extends StatelessWidget {
   const StudentPage({super.key});
@@ -60,9 +63,12 @@ class _StudentPageBodyState extends State<StudentPageBody> {
           itemCount: students.length,
           itemBuilder: (context, index){
 
-            Map student = students[index] as Map;
+           // Map student = students[index] as Map;
+
+            Student student = Student.fromJson(json.decode(jsonEncode(students[index])));
+
             return ListTile(
-              title: Text(student['name']),
+              title: Text('${student.name}'),
             );
           }
       ),

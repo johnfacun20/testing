@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:testing/user/user.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/api_response.dart';
+import '../services/student_services.dart';
 import '../services/user_services.dart';
 import '../styles.dart';
 
@@ -47,7 +48,10 @@ class _CreateUserPageBodyState extends State<CreateUserPageBody> {
 
   Future<void> saveRecord()async {
 
-    ApiResponse response = await saveUser(_txtname.text, _txtemail.text, _txtage.text, _txtaccount_type.text, _txtpassword.text);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    ApiResponse response = await saveUser(_txtname.text, _txtemail.text, _txtage.text, _txtaccount_type.text, _txtpassword.text, token);
 
     if(response.error == null){
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,6 +66,35 @@ class _CreateUserPageBodyState extends State<CreateUserPageBody> {
       );
     }
   }
+
+  List<String> students = [];
+  String dropdownValue = "";
+
+  Future<void> getStudents() async {
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    ApiResponse response = await getAllStudents(token);
+
+    if(response.error == null){
+      setState(() {
+        students = response.data as List<String>;
+        dropdownValue = students.first;
+      });
+    } else {
+      print('${response.error}');
+    }
+
+  }
+
+  @override
+  void initState() {
+    getStudents();
+    super.initState();
+  }
+
+  static const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +157,28 @@ class _CreateUserPageBodyState extends State<CreateUserPageBody> {
                     }
                     return null;
                   },
+                ),
+                DropdownButton<String>(
+                  value: dropdownValue,
+                  icon: const Icon(Icons.arrow_downward),
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  items: students.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
                 const SizedBox(height: 10.0),
                 TextButton(

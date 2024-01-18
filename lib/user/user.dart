@@ -46,6 +46,11 @@ class _UserState extends State<UserPage> {
     }
   }
 
+  Future<void> _refresh() async {
+    getUsers();
+    _refreshIndicatorKey.currentState?.show();
+  }
+
   Future<void> deleteRecord(int userID) async {
 
     ApiResponse response = await deleteUser(userID);
@@ -90,6 +95,8 @@ class _UserState extends State<UserPage> {
     super.initState();
   }
 
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -125,39 +132,43 @@ class _UserState extends State<UserPage> {
               ),
             )*/
           ),
-          body: ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index){
+          body: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: _refresh,
+            child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index){
 
-                Map user = users[index] as Map;
+                  Map user = users[index] as Map;
 
-                  return ListTile(
-                    leading: Text('${index+1}'),
-                    title: Text('${user['name']}'),
-                    subtitle: Text('${user['email']}'),
-                    trailing: PopupMenuButton(
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Icon(Icons.more_vert, color: Colors.black,),
+                    return ListTile(
+                      leading: Text('${index+1}'),
+                      title: Text('${user['name']}'),
+                      subtitle: Text('${user['email']}'),
+                      trailing: PopupMenuButton(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Icon(Icons.more_vert, color: Colors.black,),
+                        ),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(child: Text('Edit'), value: 'Edit',),
+                          PopupMenuItem(child: Text('Delete'), value: 'Delete',)
+                        ],
+                        onSelected: (val) {
+                          if(val == 'Edit'){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditUser(userID: user['id'])));
+                          } else {
+                            _showMessageBox(context, user['id']);
+                          }
+                        },
                       ),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(child: Text('Edit'), value: 'Edit',),
-                        PopupMenuItem(child: Text('Delete'), value: 'Delete',)
-                      ],
-                      onSelected: (val) {
-                        if(val == 'Edit'){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditUser(userID: user['id'])));
-                        } else {
-                          _showMessageBox(context, user['id']);
-                        }
-                      },
-                    ),
-                  );
-                }
+                    );
+                  }
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () { 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => StudentPage()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateUserPage()));
             },
             child: Icon(Icons.add),
           ),

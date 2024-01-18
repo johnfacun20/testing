@@ -82,7 +82,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
 }
 
-Future<ApiResponse> saveUser(String name, String email, String age, String account_type, String password) async {
+Future<ApiResponse> saveUser(String name, String email, String age, String account_type, String password, String? token) async {
 
   ApiResponse apiResponse = ApiResponse();
 
@@ -90,7 +90,10 @@ Future<ApiResponse> saveUser(String name, String email, String age, String accou
 
     final response = await http.post(
         Uri.parse('$ipaddress/users'),
-        headers: {'Accept': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          'Authorization':'Bearer ${token}'
+        },
         body: {
           'name':name,
           'email':email,

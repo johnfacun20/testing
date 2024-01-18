@@ -1,1 +1,1 @@
-const String ipaddress = 'http://10.0.2.2:8000/api';
+const String ipaddress = 'https://phplaravel-1199458-4234236.cloudwaysapps.com/api';

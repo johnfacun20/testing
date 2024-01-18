@@ -88,6 +88,8 @@ class _MyAppState extends State<MyApp> {
           child: Form(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                   TextFormField(
                     controller: txtEmail,
@@ -111,20 +113,20 @@ class _MyAppState extends State<MyApp> {
                     return null;
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: ElevatedButton(
-                      child: const Text('Submit'),
-                      onPressed: () {
-                        if(_formKey.currentState!.validate()){
-                          setState(() {
-                            loading = true;
-                            loginUser();
-                          });
-                        }
-                      },
-                    ),
-                ),
+                 SizedBox(
+                   width: double.infinity,
+                   child: ElevatedButton(
+                        child: const Text('Submit'),
+                        onPressed: () {
+                          if(_formKey.currentState!.validate()){
+                            setState(() {
+                              loading = true;
+                              loginUser();
+                            });
+                          }
+                        },
+                      ),
+                 ),
                 TextButton(
                   onPressed: (){
                     Navigator.of(context).push(
