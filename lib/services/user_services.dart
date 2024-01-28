@@ -198,3 +198,40 @@ Future<ApiResponse> getAllUsers(String? token) async {
 
   return apiResponse;
 }
+
+Future<ApiResponse> getUser(String? userID) async {
+
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+
+    final response = await http.get(
+        Uri.parse('$ipaddress/users/${userID}'),
+        headers: {
+          'Accept': 'application/json'
+        }
+    );
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['user'];
+        print(jsonDecode(response.body)['user']);
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['message'];
+        apiResponse.error = errors;
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = 'Something went wrong.';
+        break;
+    }
+
+  } catch(e){
+    apiResponse.error = 'Something went wrong.';
+  }
+
+  return apiResponse;
+}

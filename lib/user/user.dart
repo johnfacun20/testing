@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testing/dashboard.dart';
+import 'package:testing/drawer.dart';
 import 'package:testing/main.dart';
 import 'package:testing/model/api_response.dart';
 import 'package:testing/model/user.dart';
@@ -132,6 +134,7 @@ class _UserState extends State<UserPage> {
               ),
             )*/
           ),
+          drawer: DrawerMenu(),
           body: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: _refresh,
@@ -158,7 +161,8 @@ class _UserState extends State<UserPage> {
                           if(val == 'Edit'){
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditUser(userID: user['id'])));
                           } else {
-                            _showMessageBox(context, user['id']);
+                            //_showMessageBox(context, user['id']);
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => Dashboard()));
                           }
                         },
                       ),
